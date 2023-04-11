@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UserDto {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   @IsString()

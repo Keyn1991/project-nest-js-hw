@@ -11,15 +11,15 @@ export class UsersService {
     return this.users;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.users[id];
   }
 
-  update(id: number, user: any) {
+  update(id: string, user: any) {
     this.users[id] = user;
   }
 
-  remove(id: number) {
-    this.users.splice(id, 1);
+  remove(id: string) {
+    this.users.splice(Number(id), 1);
   }
 }
