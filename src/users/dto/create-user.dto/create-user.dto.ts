@@ -19,4 +19,8 @@ export class UserDto {
   @IsNumber()
   @IsNotEmpty()
   age: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  status: boolean;
 }
