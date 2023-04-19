@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { PetsModule } from './pets/pets.module';
-import { UsersController } from "./users/users.controller";
-import { UsersService } from "./users/users.service";
-import { PrismaService } from "./core/orm/prisma.service";
+import { UsersController } from './users/users.controller';
+import { UsersService } from './users/users.service';
+import { PrismaService } from './core/orm/prisma.service';
 
 @Module({
   imports: [UsersModule, PetsModule],

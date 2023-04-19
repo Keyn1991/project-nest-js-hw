@@ -1,38 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
-import { UserDto } from './dto/create-user.dto/create-user.dto'
-import {PrismaService} from "../core/orm/prisma.service";
+import { UserDto } from './dto/create-user.dto/create-user.dto';
+import { PrismaService } from '../core/orm/prisma.service';
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaService: PrismaService) {
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(usersData: UserDto): Promise<User> {
-      return  this.prismaService.user.create({
-        data: {
-          firstName: usersData.firstName,
-          lastName: usersData.lastName,
-          age: usersData.age,
-          status: usersData.status,
-        }
-      })
-  }
-
-  async findAll(): Promise<User[]> {
-    return this.prismaService.user.findMany();
-  }
-  async findOne(id: string): Promise<User> {
-    return this.prismaService.user.findUnique({
-      where: {
-        id: parseInt(id),
+    return this.prismaService.user.create({
+      data: {
+        firstName: usersData.firstName,
+        lastName: usersData.lastName,
+        age: usersData.age,
+        status: usersData.status,
+        avatar: usersData.avatar,
       },
     });
   }
-  async update(id: string, user: UserDto): Promise<User> {
+
+  async findAll(): Promise<User[]> {
+    return this.prismaService.user.findMany({
+      orderBy: {
+        firstName: 'asc',
+      },
+      take: 5,
+    });
+  }
+  async findOne(userId: string): Promise<User> {
+    return this.prismaService.user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+    });
+  }
+  async update(userId: string, user: UserDto): Promise<User> {
     return this.prismaService.user.update({
       where: {
-        id: parseInt(id),
+        id: parseInt(userId),
       },
       data: {
         firstName: user.firstName,
@@ -42,11 +47,23 @@ export class UsersService {
       },
     });
   }
-  async remove(id: string): Promise<User> {
+  async remove(userId: string): Promise<User> {
     return this.prismaService.user.delete({
       where: {
-        id: parseInt(id),
+        id: parseInt(userId),
       },
     });
+  }
+
+  async getUserById(userId: string) {
+    return this.prismaService.user.findFirst({
+      where: {id: Number(userId)},
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        age: true,
+      },
+    })
   }
 }

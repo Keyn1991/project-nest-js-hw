@@ -23,4 +23,8 @@ export class UserDto {
   @ApiProperty()
   @IsNotEmpty()
   status: boolean;
+
+  @ApiProperty()
+  avatar: string;
+
 }
