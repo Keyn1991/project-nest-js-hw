@@ -1,9 +1,21 @@
-import { Request, Response } from 'express';
-import {Body, Controller, HttpStatus, Patch, Post, Req, Res, UploadedFile, UseInterceptors} from "@nestjs/common";
+import { Response } from 'express';
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    Param,
+    Patch,
+    Post,
+    Req,
+    Res,
+    UploadedFile,
+    UseInterceptors
+} from "@nestjs/common";
 import { PetsService } from './pets.service';
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import {editFileName, imageFileFilter} from "../core/file-uploade/file-uploade";
+import {PetDto} from "./dto/pet.dto";
 
 
 
@@ -13,15 +25,16 @@ export class PetsController {
     constructor(private readonly petsService: PetsService) {}
 
     @Post()
-    async createPet(req: Request, res: Response) {
+    async createPet(@Body() petDto: PetDto, @Param('userId') userId: string, @Res() res: Response) {
         try {
-            const pet = await this.petsService.createAnimal(req.body, req.params.userId);
+            const pet = await this.petsService.createAnimal(petDto, userId);
             return res.status(201).json({ data: pet });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: 'Something went wrong.' });
         }
     }
+
     @Patch()
     @UseInterceptors(
         FileFieldsInterceptor(

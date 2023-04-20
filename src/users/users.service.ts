@@ -8,12 +8,14 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(usersData: UserDto): Promise<User> {
+    const age = parseInt(usersData.age);
+    const status = Boolean(usersData.status);
     return this.prismaService.user.create({
       data: {
         firstName: usersData.firstName,
         lastName: usersData.lastName,
-        age: usersData.age,
-        status: usersData.status,
+        age,
+        status,
         avatar: usersData.avatar,
       },
     });
@@ -35,6 +37,8 @@ export class UsersService {
     });
   }
   async update(userId: string, user: UserDto): Promise<User> {
+    const age = parseInt(user.age);
+    const status = Boolean(user.status);
     return this.prismaService.user.update({
       where: {
         id: parseInt(userId),
@@ -42,8 +46,8 @@ export class UsersService {
       data: {
         firstName: user.firstName,
         lastName: user.lastName,
-        age: user.age,
-        status: user.status,
+        age,
+        status,
       },
     });
   }

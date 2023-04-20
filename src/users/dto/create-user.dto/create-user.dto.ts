@@ -16,9 +16,8 @@ export class UserDto {
   lastName: string;
 
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  age: number;
+  @IsString()
+  age: string;
 
   @ApiProperty()
   @IsNotEmpty()

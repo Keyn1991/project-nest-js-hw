@@ -15,8 +15,11 @@ export class PetsService {
   ) {
   }
 
-  async createAnimal(data: PetDto, userId: string) {
+  async createAnimal(data: PetDto, userId: string): Promise<Pets> {
     const user = await this.checkUser(userId)
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
 
     return this.prismaService.pets.create({
       data: {
@@ -40,31 +43,37 @@ export class PetsService {
   }
 
   async updateAnimal(data: any): Promise<Pets> {
+    const pet = await this.prismaService.pets.findUnique({
+      where: { id: data.id },
+    });
 
+    if (!pet) {
+      throw new HttpException('Pet not found', HttpStatus.NOT_FOUND);
+    }
 
-    return this.prismaService.pets.create({
+    return this.prismaService.pets.update({
+      where: { id: data.id },
       data: {
         name: data.name,
         type: data.type,
         status: data.status,
-        ownerId: data.ownerId,
         image: data.image,
         logo: data.logo,
       },
     });
   }
+
+  async findAll(): Promise<Pets[]> {
+    return this.prismaService.pets.findMany({
+      include: { owner: true },
+    });
+  }
+
+  async findOne(id: number) {
+    return this.prismaService.pets.findUnique({
+      where: { id },
+      include: { owner: true },
+    });
+  }
+
 }
-//   async findAll(): Promise<Pets[]> {
-//     return this.prismaService.pets.findMany({
-//       include: { owner: true },
-//     });
-//   }
-//
-//   async findOne(id: number) {
-//     return this.prismaService.pets.findUnique({
-//       where: { id },
-//       include: { owner: true },
-//     });
-//   }
-//
-// }

@@ -19,7 +19,7 @@ import { diskStorage } from 'multer';
 import {editFileName, imageFileFilter} from '../core/file-uploade/file-uploade';
 import {PetsService} from "../pets/pets.service";
 import {PetDto} from "../pets/dto/pet.dto";
-import {PetsController} from "../pets/pets.controller";
+
 
 @ApiTags('users')
 @Controller('users')
