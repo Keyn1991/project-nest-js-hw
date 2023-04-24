@@ -12,6 +12,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
@@ -25,8 +26,9 @@ import {
 } from '../core/file-uploade/file-uploade';
 import { PetsService } from '../pets/pets.service';
 import { PetDto } from '../pets/dto/pet.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -39,7 +41,12 @@ export class UsersController {
   async findAll(@Req() req: any, @Res() res: any) {
     return res.status(HttpStatus.OK).json(await this.usersService.findAll());
   }
-
+  @UseGuards(AuthGuard())
+  @Get()
+  async getUsersList(@Req() req: any, @Res() res: any) {
+    console.log(req);
+    return res.status(HttpStatus.OK).json(await this.usersService.findAll());
+  }
   @ApiParam({ name: 'userId', required: true })
   @Get('/:userId')
   async findOne(
