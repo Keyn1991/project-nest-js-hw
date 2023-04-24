@@ -61,13 +61,13 @@ export class UsersService {
 
   async getUserById(userId: string) {
     return this.prismaService.user.findFirst({
-      where: {id: Number(userId)},
+      where: { id: Number(userId) },
       select: {
         id: true,
         firstName: true,
         lastName: true,
         age: true,
       },
-    })
+    });
   }
 }

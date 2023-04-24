@@ -1,22 +1,26 @@
-import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 
 import { Pets } from '@prisma/client';
 import { PrismaService } from '../core/orm/prisma.service';
-import {PetDto} from "./dto/pet.dto";
-import {UsersService} from "../users/users.service";
+import { PetDto } from './dto/pet.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PetsService {
-
   constructor(
-      @Inject(forwardRef(() => UsersService))
-      private readonly prismaService: PrismaService,
-      private readonly userService: UsersService,
-  ) {
-  }
+    @Inject(forwardRef(() => UsersService))
+    private readonly prismaService: PrismaService,
+    private readonly userService: UsersService,
+  ) {}
 
   async createAnimal(data: PetDto, userId: string): Promise<Pets> {
-    const user = await this.checkUser(userId)
+    const user = await this.checkUser(userId);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -32,7 +36,6 @@ export class PetsService {
       },
     });
   }
-
 
   async checkUser(userId: string) {
     const user = await this.userService.getUserById(userId);
@@ -75,5 +78,4 @@ export class PetsService {
       include: { owner: true },
     });
   }
-
 }

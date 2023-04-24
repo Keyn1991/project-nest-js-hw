@@ -32,19 +32,3 @@ model Pets {
   ownerId Int?
 }
 
-// model User {
-//   id        Int     @id @map("_id")
-//   firstName String  @unique
-//   lastName  String?
-//   age       Int
-//   pets      Pets[]
-// }
-//
-// model Pets {
-//   id      Int      @id @map("_id")
-//   name    String
-//   type    String?
-//   status  Boolean? @default(false)
-//   owner   User?    @relation(fields: [ownerId], references: [id])
-//   ownerId Int?
-// }

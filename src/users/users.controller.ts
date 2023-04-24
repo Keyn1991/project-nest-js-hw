@@ -1,52 +1,55 @@
 import {
   Body,
   Controller,
-  Delete, forwardRef,
+  Delete,
+  forwardRef,
   Get,
-  HttpStatus, Inject,
+  HttpStatus,
+  Inject,
   Param,
   Post,
   Put,
   Req,
-  Res, UploadedFile,
+  Res,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import {ApiParam, ApiTags} from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/create-user.dto/create-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import {editFileName, imageFileFilter} from '../core/file-uploade/file-uploade';
-import {PetsService} from "../pets/pets.service";
-import {PetDto} from "../pets/dto/pet.dto";
-
+import {
+  editFileName,
+  imageFileFilter,
+} from '../core/file-uploade/file-uploade';
+import { PetsService } from '../pets/pets.service';
+import { PetDto } from '../pets/dto/pet.dto';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
-      private readonly usersService: UsersService,
-      @Inject(forwardRef(() => PetsService))
-      private readonly petsService: PetsService,
+    private readonly usersService: UsersService,
+    @Inject(forwardRef(() => PetsService))
+    private readonly petsService: PetsService,
   ) {}
 
   @Get()
   async findAll(@Req() req: any, @Res() res: any) {
-    return res
-        .status(HttpStatus.OK)
-        .json(await this.usersService.findAll());
+    return res.status(HttpStatus.OK).json(await this.usersService.findAll());
   }
 
   @ApiParam({ name: 'userId', required: true })
   @Get('/:userId')
   async findOne(
-      @Param('userId') userId: string,
-      @Req() req: any,
-      @Res() res: any,
+    @Param('userId') userId: string,
+    @Req() req: any,
+    @Res() res: any,
   ) {
     return res
-        .status(HttpStatus.OK)
-        .json(await this.usersService.findOne(userId));
+      .status(HttpStatus.OK)
+      .json(await this.usersService.findOne(userId));
   }
   @Post()
   @UseInterceptors(
@@ -55,7 +58,7 @@ export class UsersController {
         destination: './public',
         filename: editFileName,
       }),
-      fileFilter: imageFileFilter
+      fileFilter: imageFileFilter,
     }),
   )
   async create(
@@ -87,28 +90,30 @@ export class UsersController {
 
   @Delete('/:userId')
   async remove(
-      @Req() req: any,
-      @Res() res: any,
-      @Param('userId') userId: string) {
+    @Req() req: any,
+    @Res() res: any,
+    @Param('userId') userId: string,
+  ) {
     console.log('user is delete');
-    return res.status(HttpStatus.OK).send(await this.usersService.remove(userId));
+    return res
+      .status(HttpStatus.OK)
+      .send(await this.usersService.remove(userId));
   }
   @Post('/animals/:userId')
   async addNewPet(
-      @Req() req: any,
-      @Res() res: any,
-      @Body() body: PetDto,
-      @Param('userId') userId: string,
+    @Req() req: any,
+    @Res() res: any,
+    @Body() body: PetDto,
+    @Param('userId') userId: string,
   ) {
-  const user = await this.usersService.getUserById(userId);
-  if (!user) {
-
-    return res
+    const user = await this.usersService.getUserById(userId);
+    if (!user) {
+      return res
         .status(HttpStatus.NOT_FOUND)
-        .json({massage: `User with id ${userId} not fount`});
-  }
+        .json({ massage: `User with id ${userId} not fount` });
+    }
     return res
-        .status(HttpStatus.OK)
-        .json(await this.petsService.createAnimal(body, userId));
+      .status(HttpStatus.OK)
+      .json(await this.petsService.createAnimal(body, userId));
   }
 }
