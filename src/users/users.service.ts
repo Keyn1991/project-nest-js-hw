@@ -10,23 +10,23 @@ export class UsersService {
   private salt = 10;
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createUserByManager(usersData: UserDto): Promise<User> {
-    const age = parseInt(usersData.age);
-    const status = Boolean(usersData.status);
+  async createUserByManager(userData: UserDto): Promise<User> {
     return this.prismaService.user.create({
       data: {
-        age,
-        status,
-        email: usersData.email,
-        avatar: usersData.avatar,
+        name: userData.name,
+        status: userData.status,
+        age: userData.age,
+        email: userData.email,
+        avatar: userData.avatar,
       },
     });
   }
-  async createUser(usersData: RegisterDto): Promise<User> {
-    const passwordHash = await this.hashPassword(usersData.password);
+  async createUser(userData: RegisterDto): Promise<User> {
+    const passwordHash = await this.hashPassword(userData.password);
     return this.prismaService.user.create({
       data: {
-        email: usersData.email,
+        name: userData.name,
+        email: userData.email,
         password: passwordHash,
       },
     });
@@ -35,17 +35,14 @@ export class UsersService {
   async hashPassword(password: string) {
     return bcrypt.hash(password, this.salt);
   }
-  async create(usersData: UserDto): Promise<User> {
-    const age = parseInt(usersData.age);
-    const status = Boolean(usersData.status);
+  async create(userData: UserDto): Promise<User> {
     return this.prismaService.user.create({
       data: {
-        firstName: usersData.firstName,
-        lastName: usersData.lastName,
-        age,
-        status,
-        avatar: usersData.avatar,
-        name: usersData.name,
+        name: userData.name,
+        status: userData.status,
+        age: userData.age,
+        email: userData.email,
+        avatar: userData.avatar,
       },
     });
   }
@@ -53,7 +50,7 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return this.prismaService.user.findMany({
       orderBy: {
-        firstName: 'asc',
+        name: 'asc',
       },
       take: 5,
     });
@@ -66,17 +63,16 @@ export class UsersService {
     });
   }
   async update(userId: string, user: UserDto): Promise<User> {
-    const age = parseInt(user.age);
-    const status = Boolean(user.status);
     return this.prismaService.user.update({
       where: {
         id: parseInt(userId),
       },
       data: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        age,
-        status,
+        name: user.name,
+        status: user.status,
+        age: user.age,
+        email: user.email,
+        avatar: user.avatar,
       },
     });
   }

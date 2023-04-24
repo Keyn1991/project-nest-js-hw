@@ -1,10 +1,17 @@
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsValid } from '../../decorators/check.days.decorator';
 
 export class UserDto {
-  @ApiProperty()
-  id: string;
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -12,9 +19,14 @@ export class UserDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsOptional()
   password: string;
+
+  @ApiProperty({ required: false })
+  @IsNumber()
+  @IsOptional()
+  age: number;
 
   @ApiProperty({ required: true, example: 'user@mail.com' })
   @IsString()
@@ -30,23 +42,17 @@ export class UserDto {
   city: string;
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  lastName: string;
-
-  @ApiProperty()
-  @IsString()
-  age: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
+  @IsBoolean()
+  @IsOptional()
   status: boolean;
 
   @ApiProperty()
   avatar: string;
+
+  // таблиця для персоналу
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  @IsValid()
+  dayOff: string; //  '1/35'
 }
